@@ -4,7 +4,8 @@ class FolderSynchronizer
 {
     static void Main(string[] args)
     {
-        // Source Folder One-way synchronization. You can add/delete files to any folder while programm is running.
+        // Source Folder One-way synchronization. 
+        // You can add/delete files to source or destination folders, while program is running.
 
         Console.WriteLine("Enter full Source Folder path");
         var sourceFolder = Console.ReadLine();
