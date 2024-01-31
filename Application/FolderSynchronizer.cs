@@ -16,17 +16,19 @@ class FolderSynchronizer
         Console.WriteLine("Enter Log File Path");
         var logFilePath = Console.ReadLine();
 
+        Logger.GetLogPath = logFilePath;
+
         Logger.LogInfo($"Source Folder: {sourceFolder}, " +
                          $"Replication Folder: {destFolder}," +
                          $" Synchronization Interval: {syncInterval} seconds," +
-                         $" Log File: {logFilePath},", logFilePath);
+                         $" Log File: {logFilePath},");
       
 
         // Start the synchronization loop
         while (true)
         {
-            Synchronize.StartSynchronization(sourceFolder, destFolder, logFilePath);
-            Thread.Sleep(syncInterval * 1000); 
+            Synchronize.StartSynchronization(sourceFolder, destFolder);
+            Thread.Sleep(syncInterval*1000); 
         }
     }
     

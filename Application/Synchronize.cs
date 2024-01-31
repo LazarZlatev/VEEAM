@@ -2,40 +2,39 @@
 {
     internal class Synchronize
     {
-        public static void StartSynchronization(string sourceFolder, string replicaFolder, string logfilepath)
+        private static readonly string _getlogpath = Logger.GetLogPath;
+        public static void StartSynchronization(string sourceFolder, string replicaFolder)
         {
             try
             {
                 // Create the log file
-                if (!File.Exists(logfilepath))
+                if (!File.Exists(_getlogpath))
                 {
-                    using (StreamWriter sw = File.CreateText(logfilepath))
-                    {
-                        sw.WriteLine($"Log File Created: {DateTime.Now}");
-                    }
+                    using StreamWriter sw = File.CreateText(_getlogpath);
+                    sw.WriteLine($"Log File Created: {DateTime.Now}");
                 }
 
                 // Synchronize folders
-                SynchronizeCopying(sourceFolder, replicaFolder, logfilepath);
-                SynchronizeDeleting(sourceFolder, replicaFolder,logfilepath);
+                SynchronizeCopying(sourceFolder, replicaFolder);
+                SynchronizeDeleting(sourceFolder, replicaFolder);
 
              
                 // Logging
-                Logger.LogInfo($"Synchronization Completed: {DateTime.Now}", logfilepath);
+                Logger.LogInfo($"Synchronization Completed: {DateTime.Now}");
             }
             catch (Exception ex)
             {
-                Logger.LogInfo($"Error during synchronization: {ex.Message}", logfilepath);
+                Logger.LogInfo($"Error during synchronization: {ex.Message}");
             }
         }
 
-        static private void SynchronizeCopying(string sourceFolder, string destFolder, string logfilepath)
+        static private void SynchronizeCopying(string sourceFolder, string destFolder)
         {
             if (!Directory.Exists(destFolder) || Directory.GetLastWriteTimeUtc(sourceFolder) > File.GetLastWriteTimeUtc(destFolder))
             {
                 Directory.CreateDirectory(destFolder);
-                Thread.Sleep(1000);
-                Logger.LogInfo($"Directory Created: {destFolder}", logfilepath);
+                Thread.Sleep(500);
+                Logger.LogInfo($"Directory Created: {destFolder}");
             }
 
             string[] files = Directory.GetFiles(sourceFolder);
@@ -47,7 +46,7 @@
                 {
                     File.Copy(file, dest, true);
                     File.SetAttributes(dest, FileAttributes.Normal);
-                    Logger.LogInfo($"File Copied: {dest}", logfilepath);
+                    Logger.LogInfo($"File Copied: {dest}");
                 }
             }
 
@@ -56,11 +55,11 @@
             {
                 string name = Path.GetFileName(folder);
                 string dest = Path.Combine(destFolder, name);
-                SynchronizeCopying(folder, dest, logfilepath);
+                SynchronizeCopying(folder, dest);
             }
         }
 
-        static private void SynchronizeDeleting(string sourceFolder, string destFolder, string logfilepath)
+        static private void SynchronizeDeleting(string sourceFolder, string destFolder)
         {
             string[] files = Directory.GetFiles(destFolder);
 
@@ -73,7 +72,7 @@
                 {
                     File.SetAttributes(dest, FileAttributes.Normal);
                     File.Delete(dest);
-                    Logger.LogInfo($"File Deleted: {dest}", logfilepath);
+                    Logger.LogInfo($"File Deleted: {dest}");
                 }
             }
 
@@ -86,11 +85,11 @@
                 if (!Directory.Exists(source))
                 {
                     Directory.Delete(dest,true);
-                    Logger.LogInfo($"Directory Deleted:{dest}", logfilepath);
+                    Logger.LogInfo($"Directory Deleted:{dest}");
                 }
                 else
                 {
-                    SynchronizeDeleting(source, dest, logfilepath);
+                    SynchronizeDeleting(source, dest);
                 }
             }
         }
