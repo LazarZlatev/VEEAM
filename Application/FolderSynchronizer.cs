@@ -2,19 +2,30 @@
 
 class FolderSynchronizer
 {
+    static int syncInterval;
+    static string? logFilePath;
+    static string? sourceFolder;
+    static string? destFolder;
+
     static void Main(string[] args)
     {
+        bool valid;
         // Source Folder One-way synchronization. 
         // You can add/delete files to source or destination folders, while program is running.
 
         Console.WriteLine("Enter full Source Folder path");
-        var sourceFolder = Console.ReadLine();
+        sourceFolder = Console.ReadLine();
         Console.WriteLine("Enter full Destination Folder path");
-        var destFolder = Console.ReadLine();
-        Console.WriteLine("Enter Interval In Seconds");
-        var syncInterval = int.Parse(Console.ReadLine()); // e.g : 1 
+        destFolder = Console.ReadLine();
+        do
+        {
+            Console.WriteLine("Enter Interval In Seconds <int>"); // e.g : 1 
+            string? i = Console.ReadLine();
+            valid = int.TryParse(i, out syncInterval);
+        } while (!valid);
+
         Console.WriteLine("Enter Log File Path");
-        var logFilePath = Console.ReadLine();
+        logFilePath = Console.ReadLine();
 
         Logger.GetLogPath = logFilePath;
 

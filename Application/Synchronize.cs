@@ -40,8 +40,8 @@
             string[] files = Directory.GetFiles(sourceFolder);
             foreach (string file in files)
             {
-                string name = Path.GetFileName(file);
-                string dest = Path.Combine(destFolder, name);
+                var name = Path.GetFileName(file);
+                var dest = Path.Combine(destFolder, name);
                 if (!File.Exists(dest) || File.GetLastWriteTimeUtc(Path.Combine(sourceFolder, name)) > File.GetLastWriteTimeUtc(dest))
                 {
                     File.Copy(file, dest, true);
@@ -53,8 +53,8 @@
             string[] folders = Directory.GetDirectories(sourceFolder);
             foreach (string folder in folders)
             {
-                string name = Path.GetFileName(folder);
-                string dest = Path.Combine(destFolder, name);
+                var name = Path.GetFileName(folder);
+                var dest = Path.Combine(destFolder, name);
                 SynchronizeCopying(folder, dest);
             }
         }
@@ -79,9 +79,9 @@
             string[] foldersPath = Directory.GetDirectories(destFolder);
             foreach (string subfolder in foldersPath)
             {
-                string subfoldername = Path.GetFileName(subfolder);
-                string dest = Path.Combine(destFolder, subfoldername);
-                string source = Path.Combine(sourceFolder, subfoldername);
+                var subfoldername = Path.GetFileName(subfolder);
+                var dest = Path.Combine(destFolder, subfoldername);
+                var source = Path.Combine(sourceFolder, subfoldername);
                 if (!Directory.Exists(source))
                 {
                     Directory.Delete(dest,true);
